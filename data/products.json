@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "choco",
+        "price": 123,
+        "rating": 2,
+        "reviews": 1222,
+        "image": "images\/products\/488914567_1223239872490462_134183339484534083_n.jpg",
+        "sale": false,
+        "oldPrice": 0,
+        "new": true,
+        "category_id": 3
+    },
+    {
+        "id": 2,
+        "name": "choco",
+        "price": 123,
+        "rating": 2,
+        "reviews": 1222,
+        "image": "images\/products\/488914567_1223239872490462_134183339484534083_n.jpg",
+        "sale": false,
+        "oldPrice": 222,
+        "new": true,
+        "category_id": 3
+    }
+]
