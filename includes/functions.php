@@ -1,69 +1,79 @@
 <?php
-// Common functions for the website
-
-/**
- * Format price with Philippine Peso sign
- * 
- * @param float $price The price to format
- * @return string Formatted price with Peso sign
- */
-function formatPrice($price) {
-    return '₱' . number_format($price, 2);
-}
-
-/**
- * Format and validate Philippine phone number
- * 
- * @param string $phone The phone number to format
- * @return string|false Formatted phone number or false if invalid
- */
-function formatPhilippinePhone($phone) {
-    // Remove all non-numeric characters
-    $phone = preg_replace('/[^0-9+]/', '', $phone);
+// Get delivery fee for a specific location
+function getDeliveryFee($conn, $state, $city) {
+    $fee = 0;
     
-    // Check if it starts with +63
-    if (strpos($phone, '+63') === 0) {
-        // +63 format
-        $phone = '+63' . substr($phone, 3);
+    try {
+        $stmt = $conn->prepare("SELECT fee FROM delivery_fees WHERE state = ? AND city = ? LIMIT 1");
+        $stmt->bind_param("ss", $state, $city);
+        $stmt->execute();
+        $result = $stmt->get_result();
         
-        // Check if it has the correct length (12 digits including +63)
-        if (strlen($phone) !== 12) {
-            return false;
+        if ($row = $result->fetch_assoc()) {
+            $fee = $row['fee'];
         }
-        
-        // Check if the digit after +63 is 9
-        if (substr($phone, 3, 1) !== '9') {
-            return false;
-        }
-    } 
-    // Check if it starts with 09
-    elseif (strpos($phone, '09') === 0) {
-        // 09XX format
-        
-        // Check if it has the correct length (11 digits)
-        if (strlen($phone) !== 11) {
-            return false;
-        }
-        
-        // Convert to +63 format
-        $phone = '+63' . substr($phone, 1);
-    }
-    // Check if it starts with 9
-    elseif (strpos($phone, '9') === 0) {
-        // 9XX format (without leading 0)
-        
-        // Check if it has the correct length (10 digits)
-        if (strlen($phone) !== 10) {
-            return false;
-        }
-        
-        // Convert to +63 format
-        $phone = '+63' . $phone;
-    }
-    else {
-        return false;
+    } catch (Exception $e) {
+        // Return default fee if error
+        $fee = 0;
     }
     
-    return $phone;
+    return $fee;
 }
 
+// Get all delivery fees
+function getAllDeliveryFees($conn) {
+    $fees = [];
+    
+    try {
+        $stmt = $conn->prepare("SELECT * FROM delivery_fees ORDER BY state, city");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $fees[] = $row;
+        }
+    } catch (Exception $e) {
+        // Return empty array if error
+    }
+    
+    return $fees;
+}
+
+// Get all unique states
+function getAllStates($conn) {
+    $states = [];
+    
+    try {
+        $stmt = $conn->prepare("SELECT DISTINCT state FROM delivery_fees ORDER BY state");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $states[] = $row['state'];
+        }
+    } catch (Exception $e) {
+        // Return empty array if error
+    }
+    
+    return $states;
+}
+
+// Get cities for a specific state
+function getCitiesByState($conn, $state) {
+    $cities = [];
+    
+    try {
+        $stmt = $conn->prepare("SELECT city FROM delivery_fees WHERE state = ? ORDER BY city");
+        $stmt->bind_param("s", $state);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        while ($row = $result->fetch_assoc()) {
+            $cities[] = $row['city'];
+        }
+    } catch (Exception $e) {
+        // Return empty array if error
+    }
+    
+    return $cities;
+}
