@@ -1,127 +1,78 @@
 <?php
 session_start();
-require 'db.php'; // Connect to database
 
-// Load .env variables using vlucas/phpdotenv
-require_once __DIR__ . '/vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
-
-// Only handle POST request
-// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//     // 1. reCAPTCHA Validation
-//     $recaptchaSecret = $_ENV['RECAPTCHA_SECRET_KEY'];
-//     $recaptchaResponse = $_POST['g-recaptcha-response'] ?? '';
-
-//     if (empty($recaptchaResponse)) {
-//         $_SESSION['error'] = "Please complete the captcha.";
-//         header("Location: index.php");
-//         exit;
-//     }
-
-//     $data = [
-//         'secret' => $recaptchaSecret,
-//         'response' => $recaptchaResponse
-//     ];
-
-//     $options = [
-//         'http' => [
-//             'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-//             'method'  => 'POST',
-//             'content' => http_build_query($data),
-//         ]
-//     ];
-
-//     $context = stream_context_create($options);
-//     $verify = file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context);
-
-//     if ($verify === false) {
-//         $_SESSION['error'] = "Failed to contact reCAPTCHA server.";
-//         header("Location: index.php");
-//         exit;
-//     }
-
-//     $captchaSuccess = json_decode($verify, true);
-
-//     if (!isset($captchaSuccess['success']) || !$captchaSuccess['success']) {
-//         $_SESSION['error'] = "Captcha verification failed. Error: " . implode(', ', $captchaSuccess['error-codes'] ?? ['Unknown error']);
-//         header("Location: index.php");
-//         exit;
-//     }
-
-// Check if password reset was successful
-if (isset($_SESSION['password_reset_success'])) {
-    echo "<script>alert('" . $_SESSION['password_reset_success'] . "');</script>";
-    unset($_SESSION['password_reset_success']);  // Clear the success message after displaying it
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email']);
-    $password = $_POST['password'];
-
-    if (empty($email) || empty($password)) {
-        $_SESSION['login_error'] = 'Email and password are required';
-        header('Location: index.php');
-        exit;
-    }
-
-    // Check if user is admin
-    $stmt_admin = $conn->prepare("SELECT id, password FROM admin WHERE email = :email");
-    $stmt_admin->bindParam(':email', $email, PDO::PARAM_STR);
-    $stmt_admin->execute();
-
-    // If user is admin
-    if ($stmt_admin->rowCount() > 0) {
-        $admin = $stmt_admin->fetch(PDO::FETCH_ASSOC);
-        $id = $admin['id'];
-        $stored_password = $admin['password'];
-
-        // Verify admin password
-        if (password_verify($password, $stored_password)) {
-            $_SESSION['logged_in'] = true;
-            $_SESSION['user_email'] = $email;
-            $_SESSION['user_id'] = $id;  // Add user ID to session
-            $_SESSION['role'] = 'admin'; // Assign the role as admin
-            header('Location: admin/index.php'); // Redirect to admin dashboard
-            exit;
-        } else {
-            $_SESSION['login_error'] = 'Invalid email or password';
-        }
-    } else {
-        // Check if user exists in the regular users table
-        $stmt_user = $conn->prepare("SELECT id, password FROM users WHERE email = :email");
-        $stmt_user->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt_user->execute();
-
-        if ($stmt_user->rowCount() > 0) {
-            $user = $stmt_user->fetch(PDO::FETCH_ASSOC);
-            $id = $user['id'];
-            $stored_password = $user['password'];
-
-            // Verify regular user password
-            if (password_verify($password, $stored_password)) {
-                // Update last login time for user
-                $update_login = $conn->prepare("UPDATE users SET last_login = NOW() WHERE id = :id");
-                $update_login->bindParam(':id', $id);
-                $update_login->execute();
-
-                $_SESSION['logged_in'] = true;
-                $_SESSION['user_email'] = $email;
-                $_SESSION['user_id'] = $id;  // Add user ID to session
-                header('Location: home.php'); // Redirect to user homepage
-                exit;
-            } else {
-                $_SESSION['login_error'] = 'Invalid email or password';
-            }
-        } else {
-            $_SESSION['login_error'] = 'Invalid email or password';
-        }
-    }
-
+// If already logged in as admin, redirect to dashboard
+if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
     header('Location: index.php');
     exit;
 }
 
-header('Location: index.php');
-exit;
-// }
+// Display login form - the actual login processing is done in the main login.php file
+$error = '';
+if (isset($_SESSION['login_error'])) {
+    $error = $_SESSION['login_error'];
+    unset($_SESSION['login_error']);
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Mugna</title>
+    <link rel="stylesheet" href="css/admin-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">
+                    <img src="../images/mugna-logo.png" alt="Mugna Leather Arts">
+                </div>
+                <h1>Admin Login</h1>
+                <p>Enter your credentials to access the admin panel</p>
+            </div>
+            
+            <?php if ($error): ?>
+                <div class="alert alert-danger">
+                    <?php echo $error; ?>
+                </div>
+            <?php endif; ?>
+            
+            <form action="../login.php" method="post" class="login-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                </div>
+                
+                <div class="form-group remember-me">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="remember">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="forgot-password.php" class="forgot-link">Forgot password?</a>
+                </div>
+                
+                <button type="submit" class="btn-primary btn-block">Login</button>
+            </form>
+            
+            <div class="login-footer">
+                <p>Back to <a href="../index.php">Website</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,172 +1,84 @@
-# Mugna Leather Arts
+# TCPDF
+*PHP PDF Library*
 
-A comprehensive e-commerce platform built with PHP, featuring user authentication, product management, shopping cart functionality, and order processing.
+[![Donate via PayPal](https://img.shields.io/badge/donate-paypal-87ceeb.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20TCPDF%20project)
+*Please consider supporting this project by making a donation via [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20TCPDF%20project)*
 
-> **Note:** This project was developed as a final term requirement for academic compliance. It serves as a demonstration of web development skills.
+* **category**    Library
+* **author**      Nicola Asuni <info@tecnick.com>
+* **copyright**   2002-2022 Nicola Asuni - Tecnick.com LTD
+* **license**     http://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
+* **link**        http://www.tcpdf.org
+* **source**      https://github.com/tecnickcom/TCPDF
 
-> **Privacy Notice:** This is a proprietary project. The database schema and full source code are not publicly available. For access to the database schema or inquiries about purchasing the project, please contact the developers.
 
-## Features
+## IMPORTANT
+A new version of this library is under development at https://github.com/tecnickcom/tc-lib-pdf and as a consequence this version will not receive any additional development or support.
+This version should be considered obsolete, new projects should use the new version as soon it will become stable.
 
-### Implemented Features
 
-- **User Management**
-  - User registration and login
-  - Google Authentication integration
-  - Password reset functionality
-  - User profile management
-  - OTP verification
 
-- **Product Management**
-  - Product browsing and searching
-  - Product categories
-  - Search suggestions
+## Description
 
-- **Shopping Experience**
-  - Shopping cart functionality
-  - Add to cart
-  - View cart
-  - Checkout process
-  - Order confirmation
+PHP library for generating PDF documents on-the-fly.
 
-- **Admin Features**
-  - Admin dashboard
-  - Product management
-  - Order management
-  - User management
-  - Print reports
-    - Sales reports
-    - Inventory reports
-    - User reports
-  - Export to PDF
-    - User data export
-    - Order history export
-    - Product catalog export
+### Main Features:
+* no external libraries are required for the basic functions;
+* all standard page formats, custom page formats, custom margins and units of measure;
+* UTF-8 Unicode and Right-To-Left languages;
+* TrueTypeUnicode, OpenTypeUnicode v1, TrueType, OpenType v1, Type1 and CID-0 fonts;
+* font subsetting;
+* methods to publish some XHTML + CSS code, Javascript and Forms;
+* images, graphic (geometric figures) and transformation methods;
+* supports JPEG, PNG and SVG images natively, all images supported by GD (GD, GD2, GD2PART, GIF, JPEG, PNG, BMP, XBM, XPM) and all images supported via ImagMagick (http://www.imagemagick.org/script/formats.php)
+* 1D and 2D barcodes: CODE 39, ANSI MH10.8M-1983, USD-3, 3 of 9, CODE 93, USS-93, Standard 2 of 5, Interleaved 2 of 5, CODE 128 A/B/C, 2 and 5 Digits UPC-Based Extension, EAN 8, EAN 13, UPC-A, UPC-E, MSI, POSTNET, PLANET, RMS4CC (Royal Mail 4-state Customer Code), CBC (Customer Bar Code), KIX (Klant index - Customer index), Intelligent Mail Barcode, Onecode, USPS-B-3200, CODABAR, CODE 11, PHARMACODE, PHARMACODE TWO-TRACKS, Datamatrix, QR-Code, PDF417;
+* JPEG and PNG ICC profiles, Grayscale, RGB, CMYK, Spot Colors and Transparencies;
+* automatic page header and footer management;
+* document encryption up to 256 bit and digital signature certifications;
+* transactions to UNDO commands;
+* PDF annotations, including links, text and file attachments;
+* text rendering modes (fill, stroke and clipping);
+* multiple columns mode;
+* no-write page regions;
+* bookmarks, named destinations and table of content;
+* text hyphenation;
+* text stretching and spacing (tracking);
+* automatic page break, line break and text alignments including justification;
+* automatic page numbering and page groups;
+* move and delete pages;
+* page compression (requires php-zlib extension);
+* XOBject Templates;
+* Layers and object visibility.
+* PDF/A-1b support.
 
-- **Additional Features**
-  - Real-time notifications
-  - Shipping fee calculation
-  - Responsive design
-  - Secure payment processing
-  
+### Third party fonts:
 
-### Planned Features (Not Yet Implemented)
+This library may include third party font files released with different licenses.
 
-- **Product Management**
-  - Product wishlist
-  - Product rating system
-  - Deals and promotions
+All the PHP files on the fonts directory are subject to the general TCPDF license (GNU-LGPLv3),
+they do not contain any binary data but just a description of the general properties of a particular font.
+These files can be also generated on the fly using the font utilities and TCPDF methods.
 
-- **Shopping Experience**
-  - Order tracking via receipt
-  - Customer support system
+All the original binary TTF font files have been renamed for compatibility with TCPDF and compressed using the gzcompress PHP function that uses the ZLIB data format (.z files).
 
-- **Admin Features**
-  - Bulk actions for products
-  - Advanced product CRUD operations
+The binary files (.z) that begins with the prefix "free" have been extracted from the GNU FreeFont collection (GNU-GPLv3).
+The binary files (.z) that begins with the prefix "pdfa" have been derived from the GNU FreeFont, so they are subject to the same license.
+For the details of Copyright, License and other information, please check the files inside the directory fonts/freefont-20120503
+Link : http://www.gnu.org/software/freefont/
 
-## Requirements
+The binary files (.z) that begins with the prefix "dejavu" have been extracted from the DejaVu fonts 2.33 (Bitstream) collection.
+For the details of Copyright, License and other information, please check the files inside the directory fonts/dejavu-fonts-ttf-2.33
+Link : http://dejavu-fonts.org
 
-- PHP 7.4 or higher
-- MySQL 5.7 or higher
-- Apache/Nginx web server
-- Composer (PHP package manager)
-- XAMPP/WAMP/MAMP (for local development)
+The binary files (.z) that begins with the prefix "ae" have been extracted from the Arabeyes.org collection (GNU-GPLv2).
+Link : http://projects.arabeyes.org/
 
-## Step-by-Step Installation
+### ICC profile:
 
-### Step 1: Environment Setup
-1. Create a new file named `.env` in the root directory
-2. Copy and paste the following configuration:
-   ```env
-   DB_HOST=localhost
-   DB_NAME=mugna
-   DB_USER=your_database_user
-   DB_PASS=your_database_password
-   EMAIL_ADMIN=your_admin_email@gmail.com
-   EMAIL_PASS=your_gmail_app_password
-   GOOGLE_CLIENT_ID=your_google_client_id
-   GOOGLE_CLIENT_SECRET=your_google_client_secret
-   ```
-3. Replace the placeholder values with your actual credentials
+TCPDF includes the sRGB.icc profile from the icc-profiles-free Debian package:
+https://packages.debian.org/source/stable/icc-profiles-free
 
-### Step 2: Database Setup
-1. Open your MySQL client (e.g., phpMyAdmin)
-2. Create a new database named `mugna`
-3. Contact developers at dharzdesu@gmail.com to request the database schema
-4. Import the database using the command:
-   ```bash
-   mysql -u your_database_user -p mugna < import.sql
-   ```
 
-### Step 3: Google OAuth Setup
-1. Visit [Google Cloud Console](https://console.cloud.google.com)
-2. Create a new project
-3. Enable the Google+ API
-4. Go to Credentials
-5. Create OAuth 2.0 Client ID
-6. Add authorized redirect URI:
-   `http://localhost/mugna/googleAuth/google-callback.php`
-7. Copy the Client ID and Client Secret
-8. Update the `.env` file with these credentials
+## Developer(s) Contact
 
-### Step 4: Email Configuration
-1. Set up a Gmail account for sending emails
-2. Enable 2-Step Verification in your Google Account
-3. Generate an App Password:
-   - Go to Google Account Settings
-   - Security > App Passwords
-   - Generate new app password
-4. Update the `.env` file with your email and app password
-
-### Step 5: Install Dependencies
-1. Open terminal in project directory
-2. Run the following command:
-   ```bash
-   composer install
-   ```
-
-### Step 6: Web Server Setup
-1. Ensure your web server (Apache/Nginx) is running
-2. Point your web server to the project directory
-3. Make sure the `uploads` directory is writable
-
-### Step 7: Access the System
-1. Open your web browser
-2. Navigate to: `http://localhost/mugna`
-3. You should see the login page
-
-## Directory Structure
-
-- `admin/` - Admin panel files
-- `components/` - Reusable PHP components
-- `css/` - Stylesheet files
-- `data/` - Data files
-- `images/` - Image assets
-- `includes/` - PHP include files
-- `js/` - JavaScript files
-- `uploads/` - User uploaded files
-- `vendor/` - Composer dependencies
-
-## Security Considerations
-
-- Keep your database credentials secure
-- Regularly update dependencies
-- Use HTTPS in production
-- Implement proper input validation
-- Follow security best practices for file uploads
-
-## Support
-
-For any issues, questions, or inquiries about purchasing the project, please contact:
-- **Developers:**
-  - DHARRYL DAVE B CLERIGO
-  - LORD LYLE AGREDA
-  - ERICH LORAINE DELA CERNA
-- **Email:** dharzdesu@gmail.com
-
-## License
-
-Copyright © 2025 DHARRYL DAVE B CLERIGO, LORD LYLE AGREDA, ERICH LORAINE DELA CERNA. All rights reserved.
-
-This project is proprietary software developed for academic purposes. Unauthorized copying, distribution, or use of this software, via any medium, is strictly prohibited. The database schema and full source code are not publicly available. For access or purchase inquiries, please contact the developers.
+* Nicola Asuni <info@tecnick.com>

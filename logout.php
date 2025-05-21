@@ -1,8 +1,4 @@
 <?php
-session_start();        // Start the session
-session_unset();        // Remove all session variables
-session_destroy();      // Destroy the session
-header('Location: index.php'); // Redirect to login page or homepage
+// Redirect to main logout script
+header('Location: ../logout.php');
 exit;
-
-?>
